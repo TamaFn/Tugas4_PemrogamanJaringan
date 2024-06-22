@@ -70,20 +70,6 @@ def remote_get(filename=""):
     return True
 
 
-def remote_remove(filename=""):
-    files = filename.split(" ")
-    for nama_file in files:
-        # command_str=f"GET {filename}"
-        command_str = f"REMOVE {nama_file}"
-        hasil = send_command(command_str)
-        if hasil["status"] == "OK":
-            print(f"file {nama_file} berhasil dihapus dari server")
-        else:
-            print("Gagal")
-            return False
-    return True
-
-
 def remote_upload(filename=""):
     files = filename.split(" ")
     for nama_file in files:
@@ -99,7 +85,7 @@ def remote_upload(filename=""):
             if hasil["status"] == "OK":
                 print(f"file {nama_file} berhasil diupload ke server")
             else:
-                print("Gagal")
+                print(f"Gagal mengupload file {nama_file}")
                 return False
         except Exception as e:
             print(f"Gagal: {str(e)}")
@@ -107,9 +93,32 @@ def remote_upload(filename=""):
     return True
 
 
+
+def remote_remove(filename=""):
+    files = filename.split(" ")
+    for nama_file in files:
+        # command_str=f"GET {filename}"
+        command_str = f"REMOVE {nama_file}"
+        hasil = send_command(command_str)
+        if hasil["status"] == "OK":
+            print(f"file {nama_file} berhasil dihapus dari server")
+        else:
+            print(f"Gagal menghapus file {nama_file}")
+            return False
+    return True
+
+
 if __name__ == "__main__":
-    server_address = ("172.16.16.101", 9111)
-    remote_list()
+    server_address = ("172.16.16.101", 8788)
+
+    # Mengambil list file dalam server
+    # remote_list()
+
+    # Mendapatkan file gambar dari server
     # remote_get("donalbebek.jpg pokijan.jpg")
-    # remote_remove("pokijan.jpg")
-    # remote_upload("langsat.jpg coba.txt")
+
+    # Menghapus file gambar dari server
+    # remote_remove("donalbebek.jpg")
+
+    # Mengupload file gambar dari server
+    remote_upload("donalbebek.jpg test.txt")

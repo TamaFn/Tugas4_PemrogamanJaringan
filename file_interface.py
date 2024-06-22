@@ -26,27 +26,37 @@ class FileInterface:
         except Exception as e:
             return dict(status="ERROR", data=str(e))
 
-    def remove(self, params=[]):
+
+    def upload(self, params=[]):
+        if len(params) < 2:
+            return dict(status="ERROR", data="Insufficient parameters")
+        
+        filename = params[0]
+        file_content = params[1]
         try:
-            filename = params[0]
-            if filename == "":
-                return None
-            # fp = open(f"{filename}", 'rb')
-            # isifile = base64.b64encode(fp.read()).decode()
+            file_content_decoded = base64.b64decode(file_content.encode())
+            with open(filename, "wb") as f:
+                f.write(file_content_decoded)
+            return dict(status="OK", data=f"{filename} uploaded")
+        except Exception as e:
+            return dict(status="ERROR", data=str(e))
+
+    
+    def remove(self, params=[]):
+        if not params:
+            return dict(status="ERROR", data="No filename provided")
+        
+        filename = params[0]
+        if filename == "":
+            return dict(status="ERROR", data="Filename is empty")
+        
+        try:
             os.remove(filename)
             return dict(status="OK", data_namafile=filename)
         except Exception as e:
             return dict(status="ERROR", data=str(e))
 
-    def upload(self, params=[]):
-        try:
-            filename = params[0]
-            file_content = base64.b64decode(params[1].encode())
-            with open(filename, "wb") as f:
-                f.write(file_content)
-            return dict(status="OK", data=f"{filename} uploaded")
-        except Exception as e:
-            return dict(status="ERROR", data=str(e))
+    
 
 
 # if __name__=='__main__':
